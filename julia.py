@@ -1,22 +1,28 @@
 import numpy as np
 from matplotlib import pyplot as plt
+import cv2
 
-size = 20
-# X = np.linspace(-2,2,20).reshape(size,2)
+height, width = 500, 500
+
+r_max, r_min = i_max, i_min = 2,-2
+
+real_points = np.linspace(r_max, r_min, height)
+imag_points = np.linspace(i_max, i_min, width)
+x0 = -0.5
+y0 = 0.4
+x = y = 0
+imageFile = np.zeros((height,width,3), np.uint8)
 c = complex(0.0,0.65)
-C = np.array([0.1, -0.3])
-Z = np.array([0.4, -0.8])
-M = np.zeros((size,1))
-N = np.zeros((size,1))
-for x in range(1,size):
-    Z = Z*Z + C
-    if Z[0] > 2 or Z[1] > 2:
-        break
-    else:
-        M[x]=Z[0]
-        N[x]=Z[1]
-        print(Z)
-# print(M)
-# print(N)
-plt.scatter(M,N)
-plt.show()
+for re in real_points:
+    y= 0
+    for img in imag_points:
+        z = complex(re, img)
+        n=255
+        while abs(z) < 10 and n>=5:
+            z = z*z + c
+            n-=5
+        imageFile[x,y] = [n,n,n]
+        y += 1
+    x += 1
+
+cv2.imwrite("Julia_set.jpg",imageFile)
